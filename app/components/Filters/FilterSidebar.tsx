@@ -79,25 +79,21 @@ function FilterSection({
 }
 
 /* ── Main Sidebar ──────────────────────────────────────────────── */
-export default function FilterSidebar() {
+export default function FilterSidebar({ mode = 'sidebar' }: { mode?: 'sidebar' | 'drawer' }) {
+  const isSidebar = mode === 'sidebar';
   return (
     <aside
-      className="block flex-shrink-0 bg-white sticky self-start"
+      className={`block flex-shrink-0 bg-white scrollbar-hide ${isSidebar ? 'sticky self-start' : ''}`}
       style={{
-        width: 220,
-        top: 20,
-        paddingLeft: '20px',
-        maxHeight: 'calc(100vh - 40px)',
-        overflowY: 'auto',
-        scrollbarWidth: 'none', // Firefox
-        msOverflowStyle: 'none', // IE/Edge
+        width: isSidebar ? 220 : '100%',
+        top: isSidebar ? 20 : undefined,
+        paddingLeft: isSidebar ? '20px' : 0,
+        maxHeight: isSidebar ? 'calc(100vh - 40px)' : undefined,
+        overflowY: isSidebar ? 'auto' : undefined,
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
       }}
     >
-      <style jsx global>{`
-        aside::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
 
       {/* KATEGORI */}
       <FilterSection title="Kategori" defaultOpen>
