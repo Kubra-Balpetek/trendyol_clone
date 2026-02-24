@@ -16,7 +16,11 @@ body {
   box-sizing: border-box;
 }
 
+html,
 body {
+  overflow-x: hidden;
+  width: 100%;
+  background-color: #ffffff;
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -61,12 +65,12 @@ body {
   transition: all 0.15s;
 }
 
-.custom-checkbox input:checked + .check-box {
+.custom-checkbox input:checked+.check-box {
   background: #F27A1A;
   border-color: #F27A1A;
 }
 
-.custom-checkbox input:checked + .check-box::after {
+.custom-checkbox input:checked+.check-box::after {
   content: '✓';
   color: white;
   font-size: 10px;

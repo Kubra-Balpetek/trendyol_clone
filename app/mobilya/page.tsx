@@ -52,12 +52,13 @@ const filterChips = [
 ];
 
 const sortOptions = [
-  'Önerilen Sıralama',
-  'En Çok Satanlar',
-  'En Yeniler',
-  'En Düşük Fiyat',
-  'En Yüksek Fiyat',
-  'En Çok Değerlendirilen',
+  { label: 'Önerilen Sıralama', info: true },
+  { label: 'En Düşük Fiyat', info: false },
+  { label: 'En Yüksek Fiyat', info: false },
+  { label: 'En Yeniler', info: false },
+  { label: 'En Çok Satan', info: false },
+  { label: 'En Favoriler', info: false },
+  { label: 'En Çok Değerlendirilen', info: false },
 ];
 
 const mobileCategoryPills = ['Kategori', 'İçerik', 'Tip', '🔴 Kuponlu Ürünler'];
@@ -131,31 +132,74 @@ export default function MobilyaPage() {
                 </div>
 
                 {/* Sort dropdown */}
-                <div className="relative shrink-0">
+                <div className="relative shrink-0" style={{ fontFamily: "BlinkMacSystemFont, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
                   <button
                     onClick={() => setSortOpen(!sortOpen)}
-                    className="flex items-center justify-between min-w-[200px] text-[13px] text-[#333] border border-[#e6e6e6] rounded-full px-4 py-[8px] transition-colors whitespace-nowrap"
-                    style={{ backgroundColor: '#ffffff' }}
-                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#F27A1A'}
-                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e6e6e6'}
+                    className="flex items-center justify-between text-[14px] border px-4 py-[8px] transition-colors whitespace-nowrap"
+                    style={{
+                      borderRadius: '8px',
+                      borderColor: '#e6e6e6',
+                      minWidth: '220px',
+                      backgroundColor: '#ffffff'
+                    }}
                   >
-                    <span className="font-medium text-[#333]">{selectedSort}</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F27A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 20V4M2 9l5-5 5 5" />
-                      <path d="M17 4v16M12 15l5 5 5-5" />
-                    </svg>
+                    <span style={{ color: '#666' }}>{selectedSort}</span>
+                    <div className="flex flex-row gap-[2px] items-center justify-center">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                      </svg>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                      </svg>
+                    </div>
                   </button>
+
                   {sortOpen && (
-                    <div className="absolute right-0 top-full mt-1 bg-white border border-[#e0e0e0] rounded-[4px] shadow-lg z-50 min-w-[200px]">
-                      {sortOptions.map((opt) => (
-                        <button
-                          key={opt}
-                          onClick={() => { setSelectedSort(opt); setSortOpen(false); }}
-                          className={`w-full text-left px-4 py-2 text-[13px] hover:bg-orange-50 hover:text-[#F27A1A] transition-colors ${selectedSort === opt ? 'text-[#F27A1A] font-semibold' : 'text-[#333]'}`}
-                        >
-                          {opt}
-                        </button>
-                      ))}
+                    <div
+                      className="absolute right-0 top-full mt-1 z-50 py-[8px]"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+                        minWidth: '220px',
+                        border: '1px solid #f0f0f0',
+                        outline: 'none'
+                      }}
+                    >
+                      {sortOptions.map(({ label, info }) => {
+                        const isSelected = selectedSort === label;
+                        return (
+                          <button
+                            key={label}
+                            onClick={() => { setSelectedSort(label); setSortOpen(false); }}
+                            className="w-full text-left px-[16px] py-[12px] text-[14px] flex items-center gap-[6px] transition-colors"
+                            style={{
+                              backgroundColor: isSelected ? '#f5f5f5' : 'transparent',
+                              border: 'none',
+                              outline: 'none',
+                              borderBottom: 'none' // enforcing no separate borders
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isSelected ? '#f5f5f5' : 'transparent'}
+                          >
+                            <span style={{
+                              color: isSelected ? '#f27a1a' : '#333',
+                              fontWeight: isSelected ? 600 : 400
+                            }}>
+                              {label}
+                            </span>
+                            {info && (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={isSelected ? "#f27a1a" : "#999"} strokeWidth="1.5">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                              </svg>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -176,11 +220,11 @@ export default function MobilyaPage() {
         <div className="bg-white min-h-screen">
 
           {/* Mobile Breadcrumb */}
-          <div className="flex items-center gap-1 px-4 py-2 border-b border-[#f0f0f0]">
-            <button className="flex items-center justify-center">
-              <ChevronLeft className="w-4 h-4 text-[#333]" strokeWidth={2} />
+          <div className="flex items-center gap-1 px-4 py-2 border-b border-[#f0f0f0] bg-white">
+            <button className="flex items-center justify-center bg-transparent border-none outline-none p-0 pr-2">
+              <ChevronLeft className="w-5 h-5 text-[#333]" strokeWidth={2} />
             </button>
-            <div className="flex items-center gap-1 text-[12px] text-[#999]">
+            <div className="flex items-center gap-1 text-[13px] text-[#999]">
               <a href="/" className="text-[#333] no-underline">Trendyol</a>
               <span>›</span>
               <span className="text-[#333]">Mobilya</span>
@@ -188,7 +232,7 @@ export default function MobilyaPage() {
           </div>
 
           {/* Mobile Category Title */}
-          <div className="px-4 pt-3 pb-2 text-center">
+          <div className="px-4 pt-3 pb-2 text-center bg-white">
             <h1 className="text-[15px] font-[700] text-[#1d1d1b]">Mobilya</h1>
             <p className="text-[12px] text-[#999] mt-[2px]">100000+ Ürün</p>
           </div>
@@ -203,7 +247,7 @@ export default function MobilyaPage() {
               {/* Sıralama button */}
               <button
                 onClick={() => setMobileSortOpen(!mobileSortOpen)}
-                className="flex-1 flex items-center justify-center gap-[6px] py-[10px] text-[13px] text-[#333] font-[500]"
+                className="flex-1 flex items-center justify-center gap-[6px] py-[10px] text-[13px] text-[#333] font-[500] bg-white"
                 style={{ backgroundColor: '#ffffff' }}
               >
                 <ArrowUpDown className="w-[13px] h-[13px] text-[#555]" strokeWidth={2} />
@@ -213,7 +257,7 @@ export default function MobilyaPage() {
               {/* Filtrele button */}
               <button
                 onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-                className="flex-1 flex items-center justify-center gap-[6px] py-[10px] text-[13px] text-[#333] font-[500]"
+                className="flex-1 flex items-center justify-center gap-[6px] py-[10px] text-[13px] text-[#333] font-[500] bg-white"
                 style={{ backgroundColor: '#ffffff' }}
               >
                 <SlidersHorizontal className="w-[13px] h-[13px] text-[#555]" strokeWidth={2} />
@@ -225,16 +269,19 @@ export default function MobilyaPage() {
 
 
           {/* Mobile Category Pills — horizontal scroll */}
-          <div className="flex items-center gap-[8px] overflow-x-auto px-4 py-[10px] scrollbar-hide border-b border-[#f5f5f5]">
+          <div className="flex items-center gap-[8px] overflow-x-auto px-4 py-[10px] scrollbar-hide border-b border-[#f5f5f5] bg-white">
             {mobileCategoryPills.map((pill) => (
               <button
                 key={pill}
                 onClick={() => setActiveCategory(activeCategory === pill ? null : pill)}
-                className={`flex items-center gap-[4px] shrink-0 rounded-[16px] px-[12px] py-[5px] text-[12px] font-[500] border transition-all whitespace-nowrap
+                className={`flex items-center gap-[6px] shrink-0 rounded-[100px] px-[14px] py-[6px] text-[13px] font-[500] border transition-all whitespace-nowrap outline-none
                 ${activeCategory === pill
-                    ? 'bg-[#f27a1a] text-white border-[#f27a1a]'
-                    : 'bg-white text-[#333] border-[#dbdbdb]'
+                    ? 'text-white border-[#f27a1a]'
+                    : 'text-[#333] border-[#e6e6e6]'
                   }`}
+                style={{
+                  backgroundColor: activeCategory === pill ? '#f27a1a' : '#ffffff'
+                }}
               >
                 {pill}
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -246,34 +293,89 @@ export default function MobilyaPage() {
 
           {/* Mobile sort bottom sheet */}
           {mobileSortOpen && (
-            <>
+            <div className="md:hidden">
+              {/* Backdrop */}
               <div
-                className="fixed inset-0 bg-black/40 z-50"
+                style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 9998 }}
                 onClick={() => setMobileSortOpen(false)}
               />
-              <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[16px] z-50 shadow-2xl">
-                <div className="w-[40px] h-[4px] bg-[#ddd] rounded-full mx-auto mt-3 mb-4" />
-                <p className="text-center text-[14px] font-[700] text-[#333] mb-3">Sıralama</p>
-                <div className="divide-y divide-[#f5f5f5]">
-                  {sortOptions.map((opt) => (
-                    <button
-                      key={opt}
-                      onClick={() => { setSelectedSort(opt); setMobileSortOpen(false); }}
-                      className={`w-full text-left px-5 py-[14px] text-[14px] flex items-center justify-between
-                      ${selectedSort === opt ? 'text-[#F27A1A]' : 'text-[#333]'}`}
-                    >
-                      <span>{opt}</span>
-                      {selectedSort === opt && (
-                        <svg width="16" height="16" fill="none" stroke="#F27A1A" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
+              {/* Floating Menu */}
+              <div style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: '#ffffff',
+                borderRadius: '16px 16px 0 0',
+                zIndex: 9999,
+                borderTop: '1px solid #f0f0f0',
+                boxShadow: '0 -4px 16px rgba(0,0,0,0.08)',
+                overflow: 'hidden',
+                paddingBottom: 'safe-area-inset-bottom'
+              }}>
+
+                {/* Header */}
+                <div className="flex items-center justify-between px-[20px] pt-[20px] pb-[16px] border-b border-[#f5f5f5]">
+                  <span className="text-[16px] font-[600] text-[#1d1d1b]">Sıralama</span>
+                  <button
+                    onClick={() => setMobileSortOpen(false)}
+                    style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
                 </div>
-                <div className="h-[env(safe-area-inset-bottom,0px)]" />
+
+                {/* Options */}
+                <div className="flex flex-col">
+                  {sortOptions.map(({ label, info }) => {
+                    const selected = selectedSort === label;
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => { setSelectedSort(label); setMobileSortOpen(false); }}
+                        className="hover:bg-[#f8f8f8] active:bg-[#f8f8f8] transition-colors"
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '16px 20px',
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                        }}
+                      >
+                        {/* Label + optional info icon */}
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 14, fontWeight: selected ? 600 : 400, color: selected ? '#f27a1a' : '#1d1d1b' }}>
+                            {label}
+                          </span>
+                          {info && (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={selected ? "#f27a1a" : "#aaa"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="12" y1="16" x2="12" y2="12" />
+                              <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                          )}
+                        </span>
+
+                        {/* Checkmark */}
+                        {selected && (
+                          <svg width="20" height="20" fill="none" stroke="#f27a1a" strokeWidth="1.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
               </div>
-            </>
+            </div>
           )}
 
 
